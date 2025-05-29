@@ -1,0 +1,58 @@
+﻿@model Dictionary<WebApplicationShopOnline.Models.Genre, List<WebApplicationShopOnline.Models.Game>>
+
+<div class="container">
+    <h1 class="my-4">Каталог игр</h1>
+
+    @foreach (var genreGroup in Model)
+    {
+        <div class="genre-section mb-5">
+            <h2 class="genre-title">@GetRussianGenreName(genreGroup.Key)</h2>
+            <div class="row">
+                @foreach (var game in genreGroup.Value)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100">
+                            <img src="@game.CoverImageUrl" class="card-img-top" alt="@game.Name" style="height: 200px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 class="card-title">@game.Name</h5>
+                                <p class="text-success">@game.Price.ToString("C")</p>
+                            </div>
+                            <div class="card-footer bg-white d-flex justify-content-between">
+                                <form asp-controller="GameActions" asp-action="Buy" method="post">
+                                    <input type="hidden" name="gameId" value="@game.Id" />
+                                    <button type="submit" class="btn btn-sm btn-success">Купить</button>
+                                </form>
+
+                                <form asp-controller="GameActions" asp-action="ToggleWishlist" method="post">
+                                    <input type="hidden" name="gameId" value="@game.Id" />
+                                    <button type="submit" class="btn btn-sm @(game.IsWishlisted ? "btn-warning" : "btn-outline-secondary")">
+                                        @(game.IsWishlisted ? "В избранном" : "В избранное")
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@functions {
+    string GetRussianGenreName(WebApplicationShopOnline.Models.Genre genre)
+    {
+        return genre switch
+        {
+            WebApplicationShopOnline.Models.Genre.Action => "Экшен",
+            WebApplicationShopOnline.Models.Genre.Adventure => "Приключения",
+            WebApplicationShopOnline.Models.Genre.RPG => "Ролевые игры (RPG)",
+            WebApplicationShopOnline.Models.Genre.Strategy => "Стратегии",
+            WebApplicationShopOnline.Models.Genre.Simulation => "Симуляторы",
+            WebApplicationShopOnline.Models.Genre.Sports => "Спортивные",
+            WebApplicationShopOnline.Models.Genre.Puzzle => "Головоломки",
+            WebApplicationShopOnline.Models.Genre.Horror => "Хоррор",
+            WebApplicationShopOnline.Models.Genre.Platformer => "Платформеры",
+            _ => genre.ToString()
+        };
+    }
+}

@@ -1,0 +1,72 @@
+﻿@model GameMag.Models.User
+
+<div class="container profile-container">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <img src="@Model.AvatarUrl" class="profile-avatar" alt="Аватар">
+            <h2>@Model.Name</h2>
+            <p class="text-muted">@Model.Email</p>
+        </div>
+
+        <div class="col-md-8">
+            <div class="library-section">
+                <h3><i class="bi bi-collection-play"></i> Библиотека игр</h3>
+                @if (Model.Library.Count == 0)
+                {
+                    <div class="alert alert-info">Ваша библиотека пуста</div>
+                }
+                else
+                {
+                    <div class="row">
+                        @foreach (var game in Model.Library)
+                        {
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <img src="@game.CoverImageUrl" class="card-img-top" alt="@game.Name">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@game.Name</h5>
+                                        <p class="text-muted">@game.Genre</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="#" class="btn btn-primary btn-block">Играть</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="wishlist-section mt-5">
+                <h3><i class="bi bi-heart"></i> Список желаемого</h3>
+                @if (Model.Wishlist.Count == 0)
+                {
+                    <div class="alert alert-info">Список желаемого пуст</div>
+                }
+                else
+                {
+                    <div class="row">
+                        @foreach (var game in Model.Wishlist)
+                        {
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <img src="@game.CoverImageUrl" class="card-img-top" alt="@game.Name">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@game.Name</h5>
+                                        <p class="text-success">@game.Price.ToString("C")</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <form asp-controller="GameActions" asp-action="Purchase" method="post">
+                                            <input type="hidden" name="gameId" value="@game.Id" />
+                                            <button type="submit" class="btn btn-success btn-block">Купить</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
